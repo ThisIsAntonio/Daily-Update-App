@@ -6,7 +6,9 @@ A full-stack internal tool where users can submit daily updates, built with the 
 
 - ✅ Submit daily updates via a simple form
 - ✅ Dashboard with all previous updates
-- ✅ Simulated authentication (hardcoded user ID)
+- ✅ Simulated login with dynamic user ID
+- ✅ Logout support
+- ✅ Filter updates by user ID
 - ✅ Dark/light theme toggle
 - ✅ Analytics: updates per day, total count, top words
 
@@ -28,6 +30,10 @@ pnpm dev
 
 ## 🖼 Screenshots
 
+| Login Screen | Navbar with User |
+|--------------|------------------|
+| ![Login](./img/login-screen.png) | ![Navbar](./img/navbar-logged.png) |
+
 | Update Form | Form Code |
 |-------------|------------|
 | ![Form](./img/update-form.png) | ![Code Page](./img/code-page-tsx.png) |
@@ -38,7 +44,7 @@ pnpm dev
 
 ## 🔐 Auth Simulation
 
-A hardcoded user ID (`demo-user`) is used for saving and filtering updates.
+A lightweight login form asks the user for their name, which is saved in localStorage. All updates are filtered per user ID. Users can log out and switch users at any time.
 
 ## 📁 Folder Structure
 

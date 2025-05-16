@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import NavBar from '@/components/NavBar'
 import DashboardView from '@/components/DashboardView'
 import AddUpdateButton from '@/components/AddUpdateButton'
+import { useAuth } from '@/context/AuthContext'
 
 export default function Home() {
   const [content, setContent] = useState('')
@@ -13,7 +14,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-
+  const { userId } = useAuth()
   
   useEffect(() => {
     if (showModal && textareaRef.current) {
@@ -33,7 +34,7 @@ export default function Home() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ content }),
+        body: JSON.stringify({ content, userId }),
       })
   
       if (!res.ok) {
