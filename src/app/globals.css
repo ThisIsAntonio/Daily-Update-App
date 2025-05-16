@@ -49,3 +49,15 @@ body {
   font-size: 14px !important;
 }
 
+@keyframes border-loop {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-border-loop {
+  animation: border-loop 6s linear infinite;
+}
