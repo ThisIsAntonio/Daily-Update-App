@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Daily Update App
 
-## Getting Started
+A full-stack internal tool where users can submit daily updates, built with the T3 Stack (Next.js, TypeScript, Prisma).
 
-First, run the development server:
+## ✨ Features
+
+- ✅ Submit daily updates via a simple form
+- ✅ Dashboard with all previous updates
+- ✅ Simulated authentication (hardcoded user ID)
+- ✅ Dark/light theme toggle
+- ✅ Analytics: updates per day, total count, top words
+
+## 🚀 Tech Stack
+
+- Next.js 15 (App Router)
+- Tailwind CSS 4 (with custom dark mode)
+- TypeScript
+- Prisma + SQLite
+- Recharts for data visualization
+
+## 📦 Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
+pnpm exec prisma migrate dev --name init
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🖼 Screenshots
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Update Form | Form Code |
+|-------------|------------|
+| ![Form](./img/update-form.png) | ![Code Page](./img/code-page-tsx.png) |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Dashboard (Light) | Dashboard (Dark) |
+|-------------------|------------------|
+| ![Dashboard Light](./img/dashboard-light.png) | ![Dashboard Dark](./img/dashboard-dark.png) |
 
-## Learn More
+## 🔐 Auth Simulation
 
-To learn more about Next.js, take a look at the following resources:
+A hardcoded user ID (`demo-user`) is used for saving and filtering updates.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📁 Folder Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `/src/app`: App Router structure
+- `/src/components`: Reusable components
+- `/src/hooks`: Custom React hooks (e.g., `useDarkMode` for theme toggling)
+- `/src/app/api/updates/route.ts`: API route for creating and retrieving updates using Prisma
+- `/src/server/db.ts`: Prisma client instance
+- `/prisma/schema.prisma`: Prisma DB schema
+- `/img`: Screenshots for README
 
-## Deploy on Vercel
+## 📝 License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This project is licensed under the [MIT License](./LICENSE) © 2025 Marcos Astudillo
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
