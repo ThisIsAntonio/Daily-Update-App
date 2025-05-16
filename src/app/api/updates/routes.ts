@@ -1,9 +1,8 @@
 // src/app/api/updates/route.ts
-import { PrismaClient } from "@prisma/client";
+import { db } from "@/server/db";
 import { NextResponse } from "next/server";
 
-const prisma = new PrismaClient();
-const USER_ID = "demo-user"; // autenticación simulada
+const USER_ID = "demo-user";
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -13,7 +12,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid content" }, { status: 400 });
   }
 
-  const update = await prisma.update.create({
+  const update = await db.update.create({
     data: {
       userId: USER_ID,
       content,
@@ -24,7 +23,7 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
-  const updates = await prisma.update.findMany({
+  const updates = await db.update.findMany({
     where: { userId: USER_ID },
     orderBy: { createdAt: "desc" },
   });
