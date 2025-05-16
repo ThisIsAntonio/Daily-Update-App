@@ -78,6 +78,7 @@ export default function Home() {
             <h2 className="text-lg font-semibold mb-4">New Update</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <textarea
+                ref={textareaRef}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="What did you do today?"
