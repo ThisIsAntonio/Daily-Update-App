@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import NavBar from '@/components/NavBar'
 import DashboardView from '@/components/DashboardView'
 import AddUpdateButton from '@/components/AddUpdateButton'
@@ -12,6 +12,14 @@ export default function Home() {
   const [refreshFlag, setRefreshFlag] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  
+  useEffect(() => {
+    if (showModal && textareaRef.current) {
+      textareaRef.current.focus()
+    }
+  }, [showModal])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -53,7 +61,7 @@ export default function Home() {
       <NavBar rightContent={<AddUpdateButton onClick={() => setShowModal(true)} />} />
 
       {success && (
-        <div className="bg-green-100 text-green-800 px-4 py-2 text-center text-sm shadow">
+        <div className="bg-green-100 text-green-800 px-4 py-2 text-center text-sm shadow animate-bounce">
           ✅ Update saved successfully!
         </div>
       )}
