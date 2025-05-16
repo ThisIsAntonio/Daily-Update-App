@@ -67,31 +67,31 @@ export default function Home() {
         </div>
       )}
 
-      <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] transition-colors">
-        <div className="max-w-6xl mx-auto">
+      <main className="min-h-screen bg-[var(--background)] text-[var(--foreground)] transition-colors pb-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <DashboardView refresh={refreshFlag} onAddClick={() => setShowModal(true)} />
         </div>
       </main>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50">
-          <div className="bg-[var(--background)] text-[var(--foreground)] border p-6 rounded shadow w-full max-w-md transition-colors">
-            <h2 className="text-lg font-semibold mb-4">New Update</h2>
+        <div className="fixed inset-0 bg-black/40 dark:bg-black/70 flex items-center justify-center z-50">
+          <div className="bg-[var(--background)] text-[var(--foreground)] border border-gray-300 dark:border-gray-700 p-6 rounded-xl shadow-lg w-full max-w-md transition-all transform scale-100 animate-fade-in">
+            <h2 className="text-xl font-bold mb-4">New Update</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <textarea
                 ref={textareaRef}
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="What did you do today?"
-                className="w-full h-32 p-3 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full h-32 p-3 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                 required
               />
               <div className="flex justify-end space-x-2">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 border rounded"
-                >
+                  className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                  >
                   Cancel
                 </button>
                 <button
@@ -107,8 +107,8 @@ export default function Home() {
                 </button>
               </div>
             </form>
-            {error && <p className="text-red-600 mt-2">{error}</p>}
-          </div>
+            {error && <p className="text-red-600 mt-2 text-sm">{error}</p>}
+            </div>
         </div>
       )}
     </>

@@ -114,67 +114,93 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
     <main className="min-h-screen p-6 bg-[var(--background)] text-[var(--foreground)] transition-colors">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
         {/* Column 1 : Updates list */}
-        <div className="md:col-span-2 bg-[var(--background)] text-[var(--foreground)] p-6 rounded shadow border border-gray-300">
-          <h1 className="text-2xl font-bold mb-4">Your Updates</h1>
-          {loading ? (
-            <div className="space-y-4">
-              {Array.from({ length: 3 }).map((_, idx) => (
-                <div
-                  key={idx}
-                  className="animate-pulse space-y-2 p-4 border rounded bg-[var(--background)] shadow"
-                >
-                  <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-                  <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-                </div>
-              ))}
-            </div>
-          ) : updates.length === 0 ? (
-            <div className="text-center text-gray-500 italic">
-              No updates yet. Click{' '}
-              <button
-                onClick={onAddClick}
-                className="text-blue-600 underline font-medium hover:text-blue-800 transition"
-              >
-                + Add Update
-              </button>
-              to get started!
-            </div>
-          ) : (
-            <ul className="space-y-4">
-              {updates.map((update) => (
-                <li
-                  key={update.id}
-                  className="border p-4 rounded transition-transform duration-200 hover:scale-105 hover:shadow-lg"
-                >
-                  <p>{update.content}</p>
-                  <small className="text-gray-500">{new Date(update.createdAt).toLocaleString()}</small>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        {/* Column 2: Widgets */}
-        <div className="space-y-4">
-          <div className="bg-[var(--background)] text-[var(--foreground)] border border-blue-200 rounded p-4 shadow transition-transform hover:scale-105 hover:shadow-lg">
-            <p><strong>Today:</strong> {today}</p>
-            <p><strong>Total updates:</strong> {totalUpdates}</p>
+        <div className="md:col-span-2 relative flex min-h-[520px]">
+          {/* Animated background border */}
+          <div className="absolute -inset-[2px] z-0 rounded-lg overflow-hidden pointer-events-none">
+            <div className="absolute inset-0 animate-border-loop bg-[conic-gradient(at_top_left,_#60a5fa,_#3b82f6,_#2563eb,_#60a5fa)] bg-[length:400%_400%] blur-md opacity-70" />
           </div>
 
-          <div className="bg-[var(--background)] text-[var(--foreground)] border rounded p-4 shadow transition-transform hover:scale-105 hover:shadow-lg">
+          {/* Main Content */}
+          <div className="relative z-10 flex-grow bg-[var(--background)] text-[var(--foreground)] p-6 rounded-lg shadow border border-gray-300 dark:border-gray-600 w-full flex flex-col">
+            <h1 className="text-2xl font-bold mb-4">Your Updates</h1>
+
+            {loading ? (
+              <div className="space-y-4 flex-grow">
+                {Array.from({ length: 3 }).map((_, idx) => (
+                  <div
+                    key={idx}
+                    className="animate-pulse space-y-2 p-4 border rounded bg-[var(--background)] shadow"
+                  >
+                    <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                    <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                  </div>
+                ))}
+              </div>
+            ) : updates.length === 0 ? (
+              <div className="text-center text-gray-500 italic flex-grow">
+                No updates yet. Click{' '}
+                <button
+                  onClick={onAddClick}
+                  className="text-blue-600 underline font-medium hover:text-blue-800 transition"
+                >
+                  + Add Update
+                </button>{' '}
+                to get started!
+              </div>
+            ) : (
+              <ul className="flex flex-col gap-4 flex-grow">
+                {updates.map((update) => (
+                  <li
+                    key={update.id}
+                    className="border border-gray-300 dark:border-gray-600 p-4 rounded-lg shadow-sm transition-all duration-200 hover:scale-[1.02] hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500 bg-[var(--background)] text-[var(--foreground)] animate-fade-in"
+                  >
+                    <p className="text-base leading-relaxed">
+                      {update.content}
+                    </p>
+                    <small className="text-sm text-gray-500 block mt-2">
+                      {new Date(update.createdAt).toLocaleString()}
+                    </small>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+        {/* Column 2: Widgets */}
+        <div className="space-y-4">
+          <div className="bg-[var(--background)] text-[var(--foreground)] border border-gray-300 dark:border-gray-700 
+            rounded-lg p-4 shadow-md hover:shadow-lg hover:border-blue-400 dark:hover:border-purple-500 
+            transition-all duration-300 animate-fade-in relative overflow-hidden">
+            <div className="absolute inset-0 z-0 pointer-events-none blur-xl opacity-40 bg-blue-100 dark:bg-blue-500"/>
+            {/* Main Content */}
+            <div className="relative z-10">
+              <p className="font-medium"><strong>Today:</strong> {today}</p>
+              <p className="font-medium"><strong>Total updates:</strong> {totalUpdates}</p>
+            </div>
+          </div>
+          <div className="bg-[var(--background)] text-[var(--foreground)] border border-gray-300 dark:border-gray-600 rounded-lg p-4 shadow-sm hover:shadow-md hover:scale-[1.02] hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-200 animate-fade-in">
             <h2 className="font-semibold mb-2">Updates per Day</h2>
             <ResponsiveContainer width="100%" height={150}>
               <BarChart data={updatesBarData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="day" />
                 <YAxis />
-                <Tooltip />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#1f2937',
+                    border: '1px solid #3b82f6',
+                    borderRadius: '0.375rem',
+                    color: '#ffffff',
+                  }}
+                  labelStyle={{
+                    color: '#ffffff',
+                  }}
+                />
                 <Bar dataKey="count" fill="#3182ce" />
               </BarChart>
             </ResponsiveContainer>
           </div>
-
-          <div className="bg-[var(--background)] text-[var(--foreground)] border rounded p-4 shadow transition-transform hover:scale-105 hover:shadow-lg">
+          <div className="bg-[var(--background)] text-[var(--foreground)] border border-gray-300 dark:border-gray-600 rounded-lg p-4 shadow-sm hover:shadow-md hover:scale-[1.02] hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-200 animate-fade-in">
             <h2 className="font-semibold mb-2">Words per Day</h2>
             <ul className="text-sm list-disc ml-4">
               {Object.entries(wordsPerDay).map(([day, count]) => (
@@ -182,25 +208,27 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
               ))}
             </ul>
           </div>
-
           {maxWordDay && (
-            <div className="bg-[var(--background)] text-[var(--foreground)] border rounded p-4 shadow transition-transform hover:scale-105 hover:shadow-lg">
+            <div className="bg-[var(--background)] text-[var(--foreground)] border border-gray-300 dark:border-gray-600 rounded-lg p-4 shadow-sm hover:shadow-md hover:scale-[1.02] hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-200 animate-fade-in">
               <p><strong>Most words written on:</strong></p>
               <p className="mt-1">{maxWordDay} ({wordsPerDay[maxWordDay]} words)</p>
             </div>
           )}
+          <div className="bg-[var(--background)] text-[var(--foreground)] border border-gray-300 dark:border-gray-600 rounded-lg p-4 shadow-sm hover:shadow-md hover:scale-[1.02] hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-200 animate-fade-in">
+            <h2 className="text-lg font-semibold mb-4">Top 5 Words</h2>
 
-          <div className="bg-[var(--background)] text-[var(--foreground)] border rounded p-4 shadow transition-transform hover:scale-105 hover:shadow-lg">
-            <h2 className="font-semibold mb-4">Top 5 Words</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <ol className="list-decimal ml-4 text-sm">
-                {topWords.map(([word, count]) => (
-                  <li key={word}>
-                    {word} ({count})
-                  </li>
-                ))}
-              </ol>
-              <ResponsiveContainer width="100%" height={200}>
+            {/* List */}
+            <ol className="list-decimal ml-4 text-sm space-y-1 mb-6">
+              {topWords.map(([word, count]) => (
+                <li key={word}>
+                  <span className="text-[var(--foreground)]">{word}</span>{' '}
+                  <span className="text-gray-500">({count})</span>
+                </li>
+              ))}
+            </ol>
+            {/* Chart */}
+            <div className="flex justify-center items-center">
+              <ResponsiveContainer width={300} height={240}>
                 <PieChart>
                   <Pie
                     data={topWords.map(([word, count]) => ({ name: word, value: count }))}
@@ -208,20 +236,22 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
                     nameKey="name"
                     cx="50%"
                     cy="50%"
-                    outerRadius={60}
+                    outerRadius={70}
                     fill="#8884d8"
                     label={({ name, value }) => `${name}: ${value}`}
+                    labelLine={false}
                   >
                     {topWords.map((_, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
+                  <Tooltip />
                 </PieChart>
               </ResponsiveContainer>
             </div>
           </div>
         </div>
-      </div>
-    </main>
+      </div >
+    </main >
   )
 } 
