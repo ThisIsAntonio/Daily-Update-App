@@ -1,15 +1,10 @@
+'use client'
+
 import { useEffect, useState } from 'react'
 import {
-    BarChart,
-    Bar,
-    XAxis,
-    YAxis,
-    Tooltip,
-    ResponsiveContainer,
-    CartesianGrid, 
-    PieChart,
-    Pie,
-    Cell } from 'recharts'
+    BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
+    CartesianGrid, PieChart, Pie, Cell
+} from 'recharts'
 
 type Update = {
     id: string
@@ -18,7 +13,7 @@ type Update = {
 }
 
 type Props = {
-    refresh: boolean,
+    refresh: boolean
     onAddClick: () => void
 }
 
@@ -32,7 +27,7 @@ export default function Dashboard({refresh, onAddClick}: Props) {
     const [topWords, setTopWords] = useState<[string, number][]>([])
     const [wordsPerDay, setWordsPerDay] = useState<Record<string, number>>({})
     const [maxWordDay, setMaxWordDay] = useState<string | null>(null)
-    const [today, setToday] = useState<string>('')
+    const [today, setToday] = useState('')
 
     useEffect(() => {
         const date = new Date().toLocaleDateString()
@@ -120,124 +115,117 @@ export default function Dashboard({refresh, onAddClick}: Props) {
     }))
     
     return (
-
-        <main className="min-h-screen p-6 bg-gray-100 dark:bg-gray-900 text-foreground dark:text-white transition-colors">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-                    {/* Column 1 : Updates list*/}
-                    <div className="md:col-span-2 bg-white dark:bg-gray-800 text-black dark:text-white p-6 rounded shadow">
-                        <h1 className="text-2xl font-bold mb-4">Your Updates</h1>
-                        {loading ? (
-                            <div className="space-y-4">
-                                {Array.from({ length: 3 }).map((_, idx) => (
-                                    <div
-                                    key={idx}
-                                    className="animate-pulse space-y-2 p-4 border rounded bg-white dark:bg-gray-800 shadow transition-colors text-black dark:text-white border-gray-200 dark:border-gray-700"
-                                    >
-                                    <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-                                    <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-                                    </div>
-                                ))}
-                            </div>
-                        ) : updates.length === 0 ? (
-                            <div className="text-center text-gray-500 italic">
-                                No updates yet. Click{' '}
-                                <button
-                                    onClick={onAddClick}
-                                    className="text-blue-600 underline font-medium hover:text-blue-800 transition"
-                                >
-                                    + Add Update
-                                </button>
-                                to get started!
-                            </div>
-
-                        ) : (
-                        <ul className="space-y-4">
-                            {updates.map((update) => (
-                            <li key={update.id} className="border p-4 rounded transition-transform duration-200 ease-in-out hover:scale-105 hover:shadow-lg">
-                                <p>{update.content}</p>
-                                <small className="text-gray-500">
-                                {new Date(update.createdAt).toLocaleString()}
-                                </small>
-                            </li>
-                            ))}
-                        </ul>
-                        )}
+        <main className="min-h-screen p-6 bg-[var(--background)] text-[var(--foreground)] transition-colors">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {/* Column 1 : Updates list */}
+            <div className="md:col-span-2 bg-[var(--background)] text-[var(--foreground)] p-6 rounded shadow border border-gray-300">
+              <h1 className="text-2xl font-bold mb-4">Your Updates</h1>
+              {loading ? (
+                <div className="space-y-4">
+                  {Array.from({ length: 3 }).map((_, idx) => (
+                    <div
+                      key={idx}
+                      className="animate-pulse space-y-2 p-4 border rounded bg-[var(--background)] shadow"
+                    >
+                      <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                      <div className="h-3 bg-gray-200 rounded w-1/2"></div>
                     </div>
-
-                    {/* Column 2: Widgets */}
-                    <div className="space-y-4">
-                        <div className="bg-blue-50 dark:bg-gray-800 text-foreground dark:text-white border border-blue-200 rounded p-4 shadow transition-transform duration-200 ease-in-out hover:scale-105 hover:shadow-lg">
-                            <p><strong>Today:</strong> {today}</p>
-                            <p><strong>Total updates:</strong> {totalUpdates}</p>
-                        </div>
-
-                        <div className="bg-white dark:bg-gray-800 text-foreground dark:text-white border border-gray-200 dark:border-gray-700 rounded p-4 shadow transition-colors transition-transform duration-200 ease-in-out hover:scale-105 hover:shadow-lg">
-                            <h2 className="font-semibold mb-2">Updates per Day</h2>
-                            <ResponsiveContainer width="100%" height={150}>
-                                <BarChart data={updatesBarData}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="day" />
-                                <YAxis />
-                                <Tooltip />
-                                <Bar dataKey="count" fill="#3182ce" />
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
-
-                        <div className="bg-white dark:bg-gray-800 text-foreground dark:text-white border border-gray-200 dark:border-gray-700 rounded p-4 shadow transition-colors transition-transform duration-200 ease-in-out hover:scale-105 hover:shadow-lg">
-                        <h2 className="font-semibold mb-2">Words per Day</h2>
-                        <ul className="text-sm list-disc ml-4">
-                            {Object.entries(wordsPerDay).map(([day, count]) => (
-                            <li key={day}>{day}: {count} words</li>
-                            ))}
-                        </ul>
-                        </div>
-
-                        {maxWordDay && (
-                        <div className="bg-white dark:bg-gray-800 text-foreground dark:text-white border border-gray-200 dark:border-gray-700 rounded p-4 shadow transition-colors transition-transform duration-200 ease-in-out hover:scale-105 hover:shadow-lg">
-                            <p><strong>Most words written on:</strong></p>
-                            <p className="mt-1">{maxWordDay} ({wordsPerDay[maxWordDay]} words)</p>
-                        </div>
-                        )}
-
-                        <div className="bg-white dark:bg-gray-800 text-foreground dark:text-white border border-gray-200 dark:border-gray-700 rounded p-4 shadow transition-colors transition-transform duration-200 ease-in-out hover:scale-105 hover:shadow-lg">
-                            <h2 className="font-semibold mb-4">Top 5 Words</h2>
-                            <div className="col-span-2"></div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
-                                    {/* List */}
-                                    <ol className="list-decimal ml-4 text-sm">
-                                    {topWords.map(([word, count]) => (
-                                        <li key={word}>
-                                        {word} ({count})
-                                        </li>
-                                    ))}
-                                    </ol>
-                                </div>
-
-                                {/* Pie chart */}
-                                <div className="col-span-3">
-                                    <ResponsiveContainer width="100%" height={200}>
-                                    <PieChart>
-                                        <Pie
-                                        data={topWords.map(([word, count]) => ({ name: word, value: count }))}
-                                        dataKey="value"
-                                        nameKey="name"
-                                        cx="50%"
-                                        cy="50%"
-                                        outerRadius={60}
-                                        fill = "#8884d8"
-                                        label = {({ name, value }) => `${name}: ${value}`}
-                                        >
-                                        {topWords.map((_, index) => (
-                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                        ))}
-                                        </Pie>
-                                    </PieChart>
-                                    </ResponsiveContainer>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                  ))}
+                </div>
+              ) : updates.length === 0 ? (
+                <div className="text-center text-gray-500 italic">
+                  No updates yet. Click{' '}
+                  <button
+                    onClick={onAddClick}
+                    className="text-blue-600 underline font-medium hover:text-blue-800 transition"
+                  >
+                    + Add Update
+                  </button>
+                  to get started!
+                </div>
+              ) : (
+                <ul className="space-y-4">
+                  {updates.map((update) => (
+                    <li
+                      key={update.id}
+                      className="border p-4 rounded transition-transform duration-200 hover:scale-105 hover:shadow-lg"
+                    >
+                      <p>{update.content}</p>
+                      <small className="text-gray-500">{new Date(update.createdAt).toLocaleString()}</small>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+    
+            {/* Column 2: Widgets */}
+            <div className="space-y-4">
+              <div className="bg-[var(--background)] text-[var(--foreground)] border border-blue-200 rounded p-4 shadow transition-transform hover:scale-105 hover:shadow-lg">
+                <p><strong>Today:</strong> {today}</p>
+                <p><strong>Total updates:</strong> {totalUpdates}</p>
+              </div>
+    
+              <div className="bg-[var(--background)] text-[var(--foreground)] border rounded p-4 shadow transition-transform hover:scale-105 hover:shadow-lg">
+                <h2 className="font-semibold mb-2">Updates per Day</h2>
+                <ResponsiveContainer width="100%" height={150}>
+                  <BarChart data={updatesBarData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="day" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="count" fill="#3182ce" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+    
+              <div className="bg-[var(--background)] text-[var(--foreground)] border rounded p-4 shadow transition-transform hover:scale-105 hover:shadow-lg">
+                <h2 className="font-semibold mb-2">Words per Day</h2>
+                <ul className="text-sm list-disc ml-4">
+                  {Object.entries(wordsPerDay).map(([day, count]) => (
+                    <li key={day}>{day}: {count} words</li>
+                  ))}
+                </ul>
+              </div>
+    
+              {maxWordDay && (
+                <div className="bg-[var(--background)] text-[var(--foreground)] border rounded p-4 shadow transition-transform hover:scale-105 hover:shadow-lg">
+                  <p><strong>Most words written on:</strong></p>
+                  <p className="mt-1">{maxWordDay} ({wordsPerDay[maxWordDay]} words)</p>
+                </div>
+              )}
+    
+              <div className="bg-[var(--background)] text-[var(--foreground)] border rounded p-4 shadow transition-transform hover:scale-105 hover:shadow-lg">
+                <h2 className="font-semibold mb-4">Top 5 Words</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <ol className="list-decimal ml-4 text-sm">
+                    {topWords.map(([word, count]) => (
+                      <li key={word}>
+                        {word} ({count})
+                      </li>
+                    ))}
+                  </ol>
+                  <ResponsiveContainer width="100%" height={200}>
+                    <PieChart>
+                      <Pie
+                        data={topWords.map(([word, count]) => ({ name: word, value: count }))}
+                        dataKey="value"
+                        nameKey="name"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={60}
+                        fill="#8884d8"
+                        label={({ name, value }) => `${name}: ${value}`}
+                      >
+                        {topWords.map((_, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            </div>
+          </div>
         </main>
-    )
-}
+      )
+    } 
