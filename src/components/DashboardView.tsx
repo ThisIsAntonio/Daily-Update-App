@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import {
-  AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
+  BarChart, Bar, AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, PieChart, Pie, Cell
 } from 'recharts'
 import { useAuth } from '@/context/AuthContext'
+import Calendar from 'react-calendar'
+import 'react-calendar/dist/Calendar.css'
 
 type Update = {
   id: string
@@ -35,6 +37,8 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('')
   const [refreshFlag, setRefreshFlag] = useState(false);
+  const [selectedDay, setSelectedDay] = useState<Date>(new Date());
+  const [topWordsForDay, setTopWordsForDay] = useState<[string, number][]>([]);
 
 
   useEffect(() => {
@@ -65,8 +69,6 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
           if (startDate && endDate) {
             const start = startDate;
             const end = endDate;
-            console.log('====> start', start);
-            console.log('====> end', end);
 
             filtered = data.filter((u) => {
               const created = new Date(u.createdAt);
@@ -138,9 +140,29 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
     }
   }, [startDate, endDate]);
 
+  useEffect(() => {
+    if (!selectedDay || !updates.length) return;
+
+    const updatesForDay = updates.filter(
+      (u) => new Date(u.createdAt).toLocaleDateString() === selectedDay.toLocaleDateString()
+    );    
+
+    const freq: Record<string, number> = {};
+
+    updatesForDay.forEach((u) => {
+      const words = u.content.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/).filter(Boolean);
+      words.forEach((word) => {
+        freq[word] = (freq[word] ?? 0) + 1;
+      });
+    });
+
+    const top = Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, 5);
+    setTopWordsForDay(top);
+  }, [selectedDay, updates]);
+
   return (
     <main className="min-h-screen p-6 bg-[var(--background)] text-[var(--foreground)] transition-colors">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-7xl mx-auto">
         {/* Column 1 : Updates list */}
         <div className="md:col-span-2 relative flex min-h-[520px]">
           {/* Animated background border */}
@@ -153,7 +175,7 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
             <h1 className="text-2xl font-bold mb-4">Your Updates</h1>
             <div className="flex flex-wrap items-center justify-between gap-2 w-full mb-4">
               {/* Search input */}
-              <div className="relative flex-grow max-w-[300px]">
+              <div className="relative flex-grow max-w-[150px]">
                 <input
                   type="text"
                   value={filter}
@@ -235,7 +257,7 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
             )}
           </div>
         </div>
-        {/* Column 2: Widgets */}
+        {/* Column 2 and 3 : Widgets */}
         <div className="space-y-4">
           <div className="bg-[var(--background)] text-[var(--foreground)] border border-gray-300 dark:border-gray-700 
             rounded-lg p-4 shadow-md hover:shadow-lg hover:border-blue-400 dark:hover:border-purple-500 
@@ -247,6 +269,59 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
               <p className="font-medium"><strong>Total updates:</strong> {totalUpdates}</p>
             </div>
           </div>
+
+          <div className="bg-[var(--background)] text-[var(--foreground)] border border-gray-300 dark:border-gray-600 rounded-lg p-4 shadow-sm hover:shadow-md hover:scale-[1.02] hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-200 animate-fade-in">
+            <h2 className="font-semibold mb-2">Words by Day</h2>
+            {/* Day selector */}
+            <div className="flex justify-center mb-5">
+              <Calendar
+                onChange={(date) => setSelectedDay(date as Date)}
+                value={selectedDay}
+                className="custom-calendar"
+                locale='en-US'
+                tileDisabled={({ date }) => {
+                  const formatted = date.toLocaleDateString()
+                  return !wordsPerDay[formatted]
+                }}
+              />
+            </div>
+
+            {/* Result of the day */}
+            {selectedDay && (
+              <>
+                <p className="text-sm mb-2">
+                  {selectedDay.toLocaleDateString()}: {wordsPerDay[selectedDay.toLocaleDateString()] ?? 0} words
+                </p>                
+                {topWordsForDay.length > 0 ? (
+                  <ol className="list-decimal text-sm ml-4">
+                    {topWordsForDay.map(([word, count]) => (
+                      <li key={word}>{word} ({count})</li>
+                    ))}
+                  </ol>
+                ) : (
+                  <p className="text-sm text-gray-500 italic">No data available</p>
+                )}
+              </>
+            )}
+
+            <ResponsiveContainer width="100%" height={140} className="mt-4">
+              <BarChart
+                data={topWordsForDay.map(([word, count]) => ({ word, count }))}
+                layout="vertical"
+                margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis type="number" />
+                <YAxis dataKey="word" type="category" width={80} />
+                <Tooltip />
+                <Bar dataKey="count" fill="#3182ce" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Colum 2 and 3 */}
+        <div className="space-y-4">
           <div className="bg-[var(--background)] text-[var(--foreground)] border border-gray-300 dark:border-gray-600 rounded-lg p-4 shadow-sm hover:shadow-md hover:scale-[1.02] hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-200 animate-fade-in">
             <h2 className="font-semibold mb-2">Updates per Day</h2>
             <ResponsiveContainer width="100%" height={150}>
@@ -274,14 +349,6 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
                 <Area type="monotone" dataKey="count" stroke="#3b82f6" fill="url(#areaColor)" strokeWidth={2} />
               </AreaChart>
             </ResponsiveContainer>
-          </div>
-          <div className="bg-[var(--background)] text-[var(--foreground)] border border-gray-300 dark:border-gray-600 rounded-lg p-4 shadow-sm hover:shadow-md hover:scale-[1.02] hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-200 animate-fade-in">
-            <h2 className="font-semibold mb-2">Words per Day</h2>
-            <ul className="text-sm list-disc ml-4">
-              {Object.entries(wordsPerDay).map(([day, count]) => (
-                <li key={day}>{day}: {count} words</li>
-              ))}
-            </ul>
           </div>
           {maxWordDay && (
             <div className="bg-[var(--background)] text-[var(--foreground)] border border-gray-300 dark:border-gray-600 rounded-lg p-4 shadow-sm hover:shadow-md hover:scale-[1.02] hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-200 animate-fade-in">
@@ -311,9 +378,9 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
                     nameKey="name"
                     cx="50%"
                     cy="50%"
-                    outerRadius={70}
+                    outerRadius={80}
                     fill="#8884d8"
-                    label={({ name, value }) => `${name}: ${value}`}
+                    /*label={({ name, value }) => `${name}: ${value}`} */
                     labelLine={false}
                   >
                     {topWords.map((_, index) => (
