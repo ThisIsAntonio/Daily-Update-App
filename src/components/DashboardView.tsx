@@ -39,6 +39,8 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
   const [refreshFlag, setRefreshFlag] = useState(false);
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
   const [topWordsForDay, setTopWordsForDay] = useState<[string, number][]>([]);
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
 
 
   useEffect(() => {
@@ -50,8 +52,8 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
     const fetchUpdates = async (): Promise<void> => {
       if (!userId) return
       try {
-        const res = await fetch(`/api/updates?userId=${userId}`)
-        const data: unknown = await res.json()
+        const res = await fetch(`/api/updates?userId=${userId}&page=${currentPage}&limit=${itemsPerPage}`)
+        const { updates: data, total } = await res.json()
 
         if (
           Array.isArray(data) &&
@@ -145,7 +147,7 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
 
     const updatesForDay = updates.filter(
       (u) => new Date(u.createdAt).toLocaleDateString() === selectedDay.toLocaleDateString()
-    );    
+    );
 
     const freq: Record<string, number> = {};
 
@@ -159,6 +161,21 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
     const top = Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, 5);
     setTopWordsForDay(top);
   }, [selectedDay, updates]);
+
+const filteredUpdates = updates.filter((u) => {
+  const matchesText = u.content.toLowerCase().includes(filter.toLowerCase());
+  const matchesDate = filterDate
+    ? new Date(u.createdAt).toISOString().slice(0, 10) === filterDate
+    : true;
+  return matchesText && matchesDate;
+});
+
+  const paginatedUpdates = filteredUpdates.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  )
+
+  const totalPages = Math.ceil(filteredUpdates.length / itemsPerPage)
 
   return (
     <main className="min-h-screen p-6 bg-[var(--background)] text-[var(--foreground)] transition-colors">
@@ -230,15 +247,15 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
               </div>
             ) : (
               <ul className="flex flex-col gap-4 flex-grow">
-                {updates
-                  .filter((u) => {
-                    const matchesText = u.content.toLowerCase().includes(filter.toLowerCase());
-                    const matchesDate = filterDate
-                      ? new Date(u.createdAt).toISOString().slice(0, 10) === filterDate
-                      : true;
+                {paginatedUpdates
+                  // .filter((u) => {
+                  //   const matchesText = u.content.toLowerCase().includes(filter.toLowerCase());
+                  //   const matchesDate = filterDate
+                  //     ? new Date(u.createdAt).toISOString().slice(0, 10) === filterDate
+                  //     : true;
 
-                    return matchesText && matchesDate;
-                  })
+                  //   return matchesText && matchesDate;
+                  // })
                   .map((update) => (
                     <li
                       key={update.id}
@@ -252,9 +269,27 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
                       </small>
                     </li>
                   ))}
-
               </ul>
+
             )}
+            <div className="flex justify-center items-center gap-2 mt-4">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="px-3 py-1 text-sm bg-blue-500 text-white rounded disabled:opacity-50"
+              >
+                Previous
+              </button>
+              <span className="text-sm">{currentPage} / {totalPages}</span>
+              <button
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="px-3 py-1 text-sm bg-blue-500 text-white rounded disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+
           </div>
         </div>
         {/* Column 2 and 3 : Widgets */}
@@ -291,7 +326,7 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
               <>
                 <p className="text-sm mb-2">
                   {selectedDay.toLocaleDateString()}: {wordsPerDay[selectedDay.toLocaleDateString()] ?? 0} words
-                </p>                
+                </p>
                 {topWordsForDay.length > 0 ? (
                   <ol className="list-decimal text-sm ml-4">
                     {topWordsForDay.map(([word, count]) => (

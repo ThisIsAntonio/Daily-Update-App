@@ -25,20 +25,30 @@ export async function POST(request: Request) {
   }
 }
 
-// GET /api/updates?userId=...
+// GET /api/updates?userId=...&page=1&limit=10
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const userId = searchParams.get("userId")
+  const page = parseInt(searchParams.get("page") || "1", 10)
+  const limit = parseInt(searchParams.get("limit") || "10", 10)
 
   if (!userId) {
     return NextResponse.json({ error: "Missing userId" }, { status: 400 })
   }
 
-  const updates = await db.update.findMany({
-    where: { userId },
-    orderBy: { createdAt: "desc" },
-  })
+  const skip = (page - 1) * limit
 
-  return NextResponse.json(updates)
+  const [updates, total] = await Promise.all([
+    db.update.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+      skip,
+      take: limit,
+    }),
+    db.update.count({ where: { userId } }),
+  ])
+
+  return NextResponse.json({ updates, total, page, limit })
 }
+
 
