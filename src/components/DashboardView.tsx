@@ -63,12 +63,15 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
           let filtered = data;
 
           if (startDate && endDate) {
-            const start = new Date(startDate).toDateString();
-            const end = new Date(endDate).toDateString();
+            const start = startDate;
+            const end = endDate;
+            console.log('====> start', start);
+            console.log('====> end', end);
 
             filtered = data.filter((u) => {
-              const created = new Date(u.createdAt).toDateString();
-              return created >= start && created <= end;            
+              const created = new Date(u.createdAt);
+              const createdDate = created.toISOString().slice(0, 10); // yyyy-mm-dd
+              return createdDate >= start && createdDate <= end;
             });
           }
 
@@ -129,9 +132,12 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
     count,
   }))
 
-  const applyDateFilter = () => {
-    setRefreshFlag(!refreshFlag); // Triggers fetchUpdates again
-  };
+  useEffect(() => {
+    if (startDate && endDate) {
+      setRefreshFlag(prev => !prev);
+    }
+  }, [startDate, endDate]);
+
 
   return (
     <main className="min-h-screen p-6 bg-[var(--background)] text-[var(--foreground)] transition-colors">
@@ -146,45 +152,37 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
           {/* Main Content */}
           <div className="relative z-10 flex-grow bg-[var(--background)] text-[var(--foreground)] p-6 rounded-lg shadow border border-gray-300 dark:border-gray-600 w-full flex flex-col">
             <h1 className="text-2xl font-bold mb-4">Your Updates</h1>
-            <div className="grid grid-cols-4 gap-2 items-center mb-4">
-  {/* Search input */}
-  <div className="relative col-span-1">
-    <input
-      type="text"
-      value={filter}
-      onChange={(e) => setFilter(e.target.value)}
-      placeholder="Search updates..."
-      className="w-full pl-10 pr-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-[var(--background)] text-[var(--foreground)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition text-sm"
-    />
-    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-      🔍
-    </span>
-  </div>
+            <div className="flex flex-wrap items-center justify-between gap-2 w-full mb-4">
+              {/* Search input */}
+              <div className="relative flex-grow max-w-[300px]">
+                <input
+                  type="text"
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value)}
+                  placeholder="Search updates..."
+                  className="w-full pl-10 pr-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-[var(--background)] text-[var(--foreground)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition text-sm"
+                />
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                  🔍
+                </span>
+              </div>
 
-  {/* Start date */}
-  <input
-    type="date"
-    value={startDate}
-    onChange={(e) => setStartDate(e.target.value)}
-    className="col-span-1 border px-3 py-2 rounded text-sm bg-[var(--background)] text-[var(--foreground)]"
-    />
+              {/* Start date */}
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="col-span-1 border px-3 py-2 rounded text-sm bg-[var(--background)] text-[var(--foreground)]"
+              />
 
-  {/* End date */}
-  <input
-    type="date"
-    value={endDate}
-    onChange={(e) => setEndDate(e.target.value)}
-    className="col-span-1 border px-3 py-2 rounded text-sm bg-[var(--background)] text-[var(--foreground)]"
-    />
-
-  {/* Filter button */}
-  <button
-    onClick={applyDateFilter}
-    className="col-span-1 px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
-  >
-    Filter
-  </button>
-</div>
+              {/* End date */}
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="col-span-1 border px-3 py-2 rounded text-sm bg-[var(--background)] text-[var(--foreground)]"
+              />
+            </div>
 
             {loading ? (
               <div className="space-y-4 flex-grow">
@@ -300,26 +298,25 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
             </ol>
             {/* Chart */}
             <div className="flex justify-center items-center">
-              <ResponsiveContainer width={300} height={240}>
-                <PieChart>
-                  <Pie
-                    data={topWords.map(([word, count]) => ({ name: word, value: count }))}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={70}
-                    fill="#8884d8"
-                    label={({ name, value }) => `${name}: ${value}`}
-                    labelLine={false}
-                  >
-                    {topWords.map((_, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
+              <div className="w-[300px] h-[240px] mx-auto">
+                <PieChart width={300} height={240}>                  <Pie
+                  data={topWords.map(([word, count]) => ({ name: word, value: count }))}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={70}
+                  fill="#8884d8"
+                  label={({ name, value }) => `${name}: ${value}`}
+                  labelLine={false}
+                >
+                  {topWords.map((_, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
                   <Tooltip />
                 </PieChart>
-              </ResponsiveContainer>
+              </div>
             </div>
           </div>
         </div>
