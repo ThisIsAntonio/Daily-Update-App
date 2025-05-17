@@ -61,3 +61,11 @@ body {
 .animate-border-loop {
   animation: border-loop 6s linear infinite;
 }
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0);
+}
+
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}

@@ -32,6 +32,10 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
   const { userId } = useAuth()
   const [filter, setFilter] = useState('');
   const [filterDate, setFilterDate] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('')
+  const [refreshFlag, setRefreshFlag] = useState(false);
+
 
   useEffect(() => {
     const date = new Date().toLocaleDateString()
@@ -56,12 +60,25 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
               'createdAt' in item
           )
         ) {
-          setUpdates(data)
-          setTotalUpdates(data.length)
+          let filtered = data;
+
+          if (startDate && endDate) {
+            const start = new Date(startDate).toDateString();
+            const end = new Date(endDate).toDateString();
+
+            filtered = data.filter((u) => {
+              const created = new Date(u.createdAt).toDateString();
+              return created >= start && created <= end;            
+            });
+          }
+
+          setUpdates(filtered);
+          setTotalUpdates(filtered.length);
+
 
           const grouped: Record<string, number> = {}
 
-          data.forEach((u: Update) => {
+          filtered.forEach((u: Update) => {
             const day = new Date(u.createdAt).toLocaleDateString()
             grouped[day] = (grouped[day] ?? 0) + 1
           })
@@ -72,7 +89,7 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
           const wordsPerDayCount: Record<string, number> = {}
           const wordFrequency: Record<string, number> = {}
 
-          data.forEach((u) => {
+          filtered.forEach((u) => {
             const day = new Date(u.createdAt).toLocaleDateString()
             const words = u.content
               .toLowerCase()
@@ -105,12 +122,16 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
     }
 
     void fetchUpdates();
-  }, [refresh])
+  }, [refresh, refreshFlag])
 
   const updatesBarData = Object.entries(updatesPerDay).map(([day, count]) => ({
     day,
     count,
   }))
+
+  const applyDateFilter = () => {
+    setRefreshFlag(!refreshFlag); // Triggers fetchUpdates again
+  };
 
   return (
     <main className="min-h-screen p-6 bg-[var(--background)] text-[var(--foreground)] transition-colors">
@@ -125,29 +146,45 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
           {/* Main Content */}
           <div className="relative z-10 flex-grow bg-[var(--background)] text-[var(--foreground)] p-6 rounded-lg shadow border border-gray-300 dark:border-gray-600 w-full flex flex-col">
             <h1 className="text-2xl font-bold mb-4">Your Updates</h1>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-              {/* Search input */}
-              <div className="relative">
-                <input
-                  type="text"
-                  value={filter}
-                  onChange={(e) => setFilter(e.target.value)}
-                  placeholder="Search updates..."
-                  className="w-full pl-10 pr-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-[var(--background)] text-[var(--foreground)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                />
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-                  🔍
-                </span>
-              </div>
+            <div className="grid grid-cols-4 gap-2 items-center mb-4">
+  {/* Search input */}
+  <div className="relative col-span-1">
+    <input
+      type="text"
+      value={filter}
+      onChange={(e) => setFilter(e.target.value)}
+      placeholder="Search updates..."
+      className="w-full pl-10 pr-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-[var(--background)] text-[var(--foreground)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition text-sm"
+    />
+    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+      🔍
+    </span>
+  </div>
 
-              {/* Date filter */}
-              <input
-                type="date"
-                value={filterDate}
-                onChange={(e) => setFilterDate(e.target.value)}
-                className="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-[var(--background)] text-[var(--foreground)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-              />
-            </div>
+  {/* Start date */}
+  <input
+    type="date"
+    value={startDate}
+    onChange={(e) => setStartDate(e.target.value)}
+    className="col-span-1 border px-3 py-2 rounded text-sm bg-[var(--background)] text-[var(--foreground)]"
+    />
+
+  {/* End date */}
+  <input
+    type="date"
+    value={endDate}
+    onChange={(e) => setEndDate(e.target.value)}
+    className="col-span-1 border px-3 py-2 rounded text-sm bg-[var(--background)] text-[var(--foreground)]"
+    />
+
+  {/* Filter button */}
+  <button
+    onClick={applyDateFilter}
+    className="col-span-1 px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+  >
+    Filter
+  </button>
+</div>
 
             {loading ? (
               <div className="space-y-4 flex-grow">
