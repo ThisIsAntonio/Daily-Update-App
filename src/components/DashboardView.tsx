@@ -30,6 +30,8 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
   const [maxWordDay, setMaxWordDay] = useState<string | null>(null)
   const [today, setToday] = useState('')
   const { userId } = useAuth()
+  const [filter, setFilter] = useState('');
+  const [filterDate, setFilterDate] = useState('');
 
   useEffect(() => {
     const date = new Date().toLocaleDateString()
@@ -123,6 +125,29 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
           {/* Main Content */}
           <div className="relative z-10 flex-grow bg-[var(--background)] text-[var(--foreground)] p-6 rounded-lg shadow border border-gray-300 dark:border-gray-600 w-full flex flex-col">
             <h1 className="text-2xl font-bold mb-4">Your Updates</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              {/* Search input */}
+              <div className="relative">
+                <input
+                  type="text"
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value)}
+                  placeholder="Search updates..."
+                  className="w-full pl-10 pr-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-[var(--background)] text-[var(--foreground)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                />
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                  🔍
+                </span>
+              </div>
+
+              {/* Date filter */}
+              <input
+                type="date"
+                value={filterDate}
+                onChange={(e) => setFilterDate(e.target.value)}
+                className="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-[var(--background)] text-[var(--foreground)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              />
+            </div>
 
             {loading ? (
               <div className="space-y-4 flex-grow">
@@ -149,19 +174,29 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
               </div>
             ) : (
               <ul className="flex flex-col gap-4 flex-grow">
-                {updates.map((update) => (
-                  <li
-                    key={update.id}
-                    className="border border-gray-300 dark:border-gray-600 p-4 rounded-lg shadow-sm transition-all duration-200 hover:scale-[1.02] hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500 bg-[var(--background)] text-[var(--foreground)] animate-fade-in"
-                  >
-                    <p className="text-base leading-relaxed">
-                      {update.content}
-                    </p>
-                    <small className="text-sm text-gray-500 block mt-2">
-                      {new Date(update.createdAt).toLocaleString()}
-                    </small>
-                  </li>
-                ))}
+                {updates
+                  .filter((u) => {
+                    const matchesText = u.content.toLowerCase().includes(filter.toLowerCase());
+                    const matchesDate = filterDate
+                      ? new Date(u.createdAt).toISOString().slice(0, 10) === filterDate
+                      : true;
+
+                    return matchesText && matchesDate;
+                  })
+                  .map((update) => (
+                    <li
+                      key={update.id}
+                      className="border border-gray-300 dark:border-gray-600 p-4 rounded-lg shadow-sm transition-all duration-200 hover:scale-[1.02] hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500 bg-[var(--background)] text-[var(--foreground)] animate-fade-in"
+                    >
+                      <p className="text-base leading-relaxed">
+                        {update.content}
+                      </p>
+                      <small className="text-sm text-gray-500 block mt-2">
+                        {new Date(update.createdAt).toLocaleString()}
+                      </small>
+                    </li>
+                  ))}
+
               </ul>
             )}
           </div>
@@ -171,7 +206,7 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
           <div className="bg-[var(--background)] text-[var(--foreground)] border border-gray-300 dark:border-gray-700 
             rounded-lg p-4 shadow-md hover:shadow-lg hover:border-blue-400 dark:hover:border-purple-500 
             transition-all duration-300 animate-fade-in relative overflow-hidden">
-            <div className="absolute inset-0 z-0 pointer-events-none blur-xl opacity-40 bg-blue-100 dark:bg-blue-500"/>
+            <div className="absolute inset-0 z-0 pointer-events-none blur-xl opacity-40 bg-blue-100 dark:bg-blue-500" />
             {/* Main Content */}
             <div className="relative z-10">
               <p className="font-medium"><strong>Today:</strong> {today}</p>
