@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
+  AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, PieChart, Pie, Cell
 } from 'recharts'
 import { useAuth } from '@/context/AuthContext'
@@ -138,7 +138,6 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
     }
   }, [startDate, endDate]);
 
-
   return (
     <main className="min-h-screen p-6 bg-[var(--background)] text-[var(--foreground)] transition-colors">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
@@ -251,7 +250,13 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
           <div className="bg-[var(--background)] text-[var(--foreground)] border border-gray-300 dark:border-gray-600 rounded-lg p-4 shadow-sm hover:shadow-md hover:scale-[1.02] hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-200 animate-fade-in">
             <h2 className="font-semibold mb-2">Updates per Day</h2>
             <ResponsiveContainer width="100%" height={150}>
-              <BarChart data={updatesBarData}>
+              <AreaChart data={updatesBarData}>
+                <defs>
+                  <linearGradient id="areaColor" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.6} />
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.1} />
+                  </linearGradient>
+                </defs>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="day" />
                 <YAxis />
@@ -266,8 +271,8 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
                     color: '#ffffff',
                   }}
                 />
-                <Bar dataKey="count" fill="#3182ce" />
-              </BarChart>
+                <Area type="monotone" dataKey="count" stroke="#3b82f6" fill="url(#areaColor)" strokeWidth={2} />
+              </AreaChart>
             </ResponsiveContainer>
           </div>
           <div className="bg-[var(--background)] text-[var(--foreground)] border border-gray-300 dark:border-gray-600 rounded-lg p-4 shadow-sm hover:shadow-md hover:scale-[1.02] hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-200 animate-fade-in">
@@ -298,22 +303,23 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
             </ol>
             {/* Chart */}
             <div className="flex justify-center items-center">
-              <div className="w-[300px] h-[240px] mx-auto">
-                <PieChart width={300} height={240}>                  <Pie
-                  data={topWords.map(([word, count]) => ({ name: word, value: count }))}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={70}
-                  fill="#8884d8"
-                  label={({ name, value }) => `${name}: ${value}`}
-                  labelLine={false}
-                >
-                  {topWords.map((_, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
+              <div className="w-[320px] h-[240px] mx-auto text-[var(--foreground)]">
+                <PieChart width={340} height={240}>
+                  <Pie
+                    data={topWords.map(([word, count]) => ({ name: word, value: count }))}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={70}
+                    fill="#8884d8"
+                    label={({ name, value }) => `${name}: ${value}`}
+                    labelLine={false}
+                  >
+                    {topWords.map((_, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
                   <Tooltip />
                 </PieChart>
               </div>
