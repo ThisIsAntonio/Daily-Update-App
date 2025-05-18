@@ -77,6 +77,30 @@ A lightweight login form asks the user for their name, which is saved in localSt
 - `/prisma/schema.prisma`: Prisma DB schema
 - `/img`: Screenshots for README
 
+## 📜 Version History
+
+### v2.0.0 (May 18, 2025)
+- ✅ Refactored dashboard to support **date range filtering**
+- ✅ Added **search bar** for content filtering
+- ✅ Built "**Words by Day**" calendar widget
+- ✅ Created "**Clear Filters**" button with polished UI
+- ✅ Enabled **infinite scrolling** when no filters are applied
+- ✅ Fixed filtering logic to properly combine date + search
+- ✅ Visual adjustments and layout improvements
+
+### v1.1.0
+- ✅ Added analytics widgets:
+  - Updates per day (area chart)
+  - Top 5 words (pie chart)
+  - Most verbose day
+- ✅ Visual polish: transitions, hover states, shadows
+
+### v1.0.0
+- ✅ Core app logic
+- ✅ Submit updates with user simulation
+- ✅ View update history
+- ✅ Dark/light theme with localStorage persistence
+
 
 ## 📝 License
 
