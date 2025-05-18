@@ -11,6 +11,12 @@ A full-stack internal tool where users can submit daily updates, built with the 
 - ✅ Filter updates by user ID
 - ✅ Dark/light theme toggle
 - ✅ Analytics: updates per day, total count, top words
++ - ✅ Date range filtering for updates
++ - ✅ Search updates by content
++ - ✅ Calendar-based word tracking per day
++ - ✅ Clear filters button with elegant UI
++ - ✅ Infinite scrolling (when no filters applied)
+
 
 ## 🚀 Tech Stack
 
@@ -28,6 +34,15 @@ pnpm exec prisma migrate dev --name init
 pnpm dev
 ```
 
+## 🔍 Demo Instructions
+
+1. Run the app: `pnpm dev`
+2. Enter any name to simulate login.
+3. Submit updates via the "+ Add Update" button.
+4. Try searching or filtering updates by date.
+5. Explore the analytics on the right side!
+
+
 ## 🖼 Screenshots
 
 | Login Screen | Navbar with User |
@@ -42,6 +57,10 @@ pnpm dev
 |-------------------|------------------|
 | ![Dashboard Light](./img/dashboard-light.png) | ![Dashboard Dark](./img/dashboard-dark.png) |
 
+| Date Filter & Search | Words by Day |
+|----------------------|---------------|
+| ![Date Filter](./img/date-filter-ui.png) | ![Words By Day](./img/words-by-day.png) |
+
 ## 🔐 Auth Simulation
 
 A lightweight login form asks the user for their name, which is saved in localStorage. All updates are filtered per user ID. Users can log out and switch users at any time.
@@ -50,11 +69,14 @@ A lightweight login form asks the user for their name, which is saved in localSt
 
 - `/src/app`: App Router structure
 - `/src/components`: Reusable components
++ - `/src/components/DashboardView.tsx`: Main dashboard logic and rendering
++ - `/src/context/AuthContext.tsx`: Simulated auth logic
 - `/src/hooks`: Custom React hooks (e.g., `useDarkMode` for theme toggling)
 - `/src/app/api/updates/route.ts`: API route for creating and retrieving updates using Prisma
 - `/src/server/db.ts`: Prisma client instance
 - `/prisma/schema.prisma`: Prisma DB schema
 - `/img`: Screenshots for README
+
 
 ## 📝 License
 

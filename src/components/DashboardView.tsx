@@ -9,6 +9,8 @@ import { useAuth } from '@/context/AuthContext'
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
 
+// Types
+
 type Update = {
   id: string
   content: string
@@ -23,6 +25,9 @@ type Props = {
 const COLORS = ['#3182ce', '#63b3ed', '#90cdf4', '#bee3f8', '#ebf8ff']
 
 export default function Dashboard({ refresh, onAddClick }: Props) {
+  const { userId } = useAuth()
+
+  const [allUpdates, setAllUpdates] = useState<Update[]>([])
   const [updates, setUpdates] = useState<Update[]>([])
   const [loading, setLoading] = useState(false)
   const [totalUpdates, setTotalUpdates] = useState(0)
@@ -30,168 +35,154 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
   const [topWords, setTopWords] = useState<[string, number][]>([])
   const [wordsPerDay, setWordsPerDay] = useState<Record<string, number>>({})
   const [maxWordDay, setMaxWordDay] = useState<string | null>(null)
-  const [today, setToday] = useState('')
-  const { userId } = useAuth()
-  const [filter, setFilter] = useState('');
-  const [filterDate, setFilterDate] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('')
-  const [refreshFlag, setRefreshFlag] = useState(false);
-  const [selectedDay, setSelectedDay] = useState<Date>(new Date());
   const [topWordsForDay, setTopWordsForDay] = useState<[string, number][]>([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 10
-  const [allLoaded, setAllLoaded] = useState(false)
+  const [selectedDay, setSelectedDay] = useState<Date>(new Date())
+  const [today, setToday] = useState('')
+
+  const [filter, setFilter] = useState('')
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
 
   useEffect(() => {
     setToday(new Date().toLocaleDateString())
   }, [])
 
   useEffect(() => {
-    const fetchUpdates = async (): Promise<void> => {
-      if (!userId || loading || allLoaded) return;
-      setLoading(true);
+    if (!userId) return
+    const fetchAll = async () => {
       try {
-        const res = await fetch(`/api/updates?userId=${userId}&page=${currentPage}&limit=${itemsPerPage}`);
-        const { updates: newUpdates, total } = await res.json();
-
-        if (Array.isArray(newUpdates)) {
-          const combined = [...updates, ...newUpdates];
-          setUpdates(combined);
-          setTotalUpdates(total);
-
-          const grouped: Record<string, number> = {}
-          const wordsPerDayCount: Record<string, number> = {}
-          const wordFrequency: Record<string, number> = {}
-
-          combined.forEach((u) => {
-            const day = new Date(u.createdAt).toLocaleDateString()
-            grouped[day] = (grouped[day] ?? 0) + 1
-
-            const words = u.content
-              .toLowerCase()
-              .replace(/[^\w\s]/g, '')
-              .split(/\s+/)
-              .filter(Boolean)
-
-            wordsPerDayCount[day] = (wordsPerDayCount[day] ?? 0) + words.length
-            words.forEach((word: string) => {
-              wordFrequency[word] = (wordFrequency[word] ?? 0) + 1
-            })
-          })
-
-          setUpdatesPerDay(grouped)
-          setWordsPerDay(wordsPerDayCount)
-          const sortedWords = Object.entries(wordFrequency).sort((a, b) => b[1] - a[1])
-          setTopWords(sortedWords.slice(0, 5))
-          const maxDay = Object.entries(wordsPerDayCount).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null
-          setMaxWordDay(maxDay)
-
-          if (combined.length >= total) setAllLoaded(true)
-        } else {
-          console.error('Unexpected data format:', newUpdates)
+        setLoading(true)
+        const query = new URLSearchParams({ userId, full: 'true' })
+        const res = await fetch(`/api/updates?${query.toString()}`)
+        const { updates: all } = await res.json()
+        if (Array.isArray(all)) {
+          setAllUpdates(all)
         }
-      } catch (error) {
-        console.error('Failed to load updates:', error)
+      } catch (err) {
+        console.error('❌ Error loading updates:', err)
       } finally {
         setLoading(false)
       }
     }
-
-    void fetchUpdates()
-  }, [userId, currentPage, refresh, refreshFlag])
+    fetchAll()
+  }, [userId, refresh])
 
   useEffect(() => {
+    let filtered = allUpdates
+
     if (startDate && endDate) {
-      setRefreshFlag(prev => !prev);
+      filtered = filtered.filter((u) => {
+        const dateStr = u.createdAt.slice(0, 10) // solo 'yyyy-mm-dd'
+        return dateStr >= startDate && dateStr <= endDate
+      })
     }
-  }, [startDate, endDate]);
+
+    if (filter) {
+      filtered = filtered.filter((u) =>
+        u.content.toLowerCase().includes(filter.toLowerCase())
+      )
+    }
+
+    setUpdates(filtered)
+    setTotalUpdates(filtered.length)
+  }, [startDate, endDate, filter, allUpdates])
+
 
   useEffect(() => {
-    const updatesForDay = updates.filter(
-      (u) => new Date(u.createdAt).toLocaleDateString() === selectedDay.toLocaleDateString()
-    );
+    const grouped: Record<string, number> = {}
+    const wordsPerDayCount: Record<string, number> = {}
+    const wordFrequency: Record<string, number> = {}
 
-    const freq: Record<string, number> = {};
+    allUpdates.forEach((u) => {
+      const day = formatDateKey(new Date(u.createdAt))
+      grouped[day] = (grouped[day] ?? 0) + 1
+
+      const words = u.content.toLowerCase().replace(/[^À-ſa-zA-Z0-9\s]/g, '').split(/\s+/).filter(Boolean)
+      wordsPerDayCount[day] = (wordsPerDayCount[day] ?? 0) + words.length
+      words.forEach(word => {
+        wordFrequency[word] = (wordFrequency[word] ?? 0) + 1
+      })
+    })
+
+    setUpdatesPerDay(grouped)
+    setWordsPerDay(wordsPerDayCount)
+    setTopWords(Object.entries(wordFrequency).sort((a, b) => b[1] - a[1]).slice(0, 5))
+    const maxDay = Object.entries(wordsPerDayCount).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null
+    setMaxWordDay(maxDay)
+  }, [allUpdates])
+
+  useEffect(() => {
+    const updatesForDay = allUpdates.filter(u => formatDateKey(new Date(u.createdAt)) === formatDateKey(selectedDay))
+    const freq: Record<string, number> = {}
     updatesForDay.forEach((u) => {
-      const words = u.content.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/).filter(Boolean);
-      words.forEach(word => freq[word] = (freq[word] ?? 0) + 1);
-    });
+      const words = u.content.toLowerCase().replace(/[^À-ſa-zA-Z0-9\s]/g, '').split(/\s+/).filter(Boolean)
+      words.forEach(word => freq[word] = (freq[word] ?? 0) + 1)
+    })
+    setTopWordsForDay(Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, 5))
+  }, [selectedDay, allUpdates])
 
-    const top = Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, 5);
-    setTopWordsForDay(top);
-  }, [selectedDay, updates])
+  const updatesBarData = Object.entries(updatesPerDay).map(([day, count]) => ({ day, count }))
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 200;
-      if (nearBottom && !loading && !allLoaded) {
-        setCurrentPage(prev => prev + 1);
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [loading, allLoaded]);
-
-  const filteredUpdates = updates.filter((u) => {
-    const matchesText = u.content.toLowerCase().includes(filter.toLowerCase());
-    const matchesDate = filterDate
-      ? new Date(u.createdAt).toISOString().slice(0, 10) === filterDate
-      : true;
-    return matchesText && matchesDate;
-  });
-
-  const updatesBarData = Object.entries(updatesPerDay).map(([day, count]) => ({
-    day,
-    count,
-  }))
-
+  function formatDateKey(date: Date): string {
+    return date.toISOString().slice(0, 10)
+  }
 
   return (
     <main className="min-h-screen p-6 bg-[var(--background)] text-[var(--foreground)] transition-colors">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-7xl mx-auto">
         {/* Column 1 : Updates list */}
-        <div className="md:col-span-2 relative flex min-h-[520px]">
+        <div className="md:col-span-2 relative flex h-[800px] max-h-[800px]">
           {/* Animated background border */}
           <div className="absolute -inset-[2px] z-0 rounded-lg overflow-hidden pointer-events-none">
             <div className="absolute inset-0 animate-border-loop bg-[conic-gradient(at_top_left,_#60a5fa,_#3b82f6,_#2563eb,_#60a5fa)] bg-[length:400%_400%] blur-md opacity-70" />
           </div>
 
           {/* Main Content */}
-          <div className="relative z-10 flex-grow bg-[var(--background)] text-[var(--foreground)] p-6 rounded-lg shadow border border-gray-300 dark:border-gray-600 w-full flex flex-col">
+          <div className="relative z-10 flex-grow bg-[var(--background)] text-[var(--foreground)] p-6 rounded-lg shadow border border-gray-300 dark:border-gray-600 w-full flex flex-col overflow-hidden">
             <h1 className="text-2xl font-bold mb-4">Your Updates</h1>
-            <div className="flex flex-wrap items-center justify-between gap-2 w-full mb-4">
+            <div className="flex items-center justify-between gap-2 w-full mb-2">
               {/* Search input */}
-              <div className="relative flex-grow max-w-[150px]">
+              <div className="relative flex-grow">
                 <input
                   type="text"
                   value={filter}
                   onChange={(e) => setFilter(e.target.value)}
-                  placeholder="Search updates..."
+                  placeholder="Search update..."
                   className="w-full pl-10 pr-4 py-2 rounded border border-gray-300 dark:border-gray-600 bg-[var(--background)] text-[var(--foreground)] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition text-sm"
                 />
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-                  🔍
-                </span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">🔍</span>
               </div>
 
-              {/* Start date */}
+              {/* Clear filters styled like Add Update */}
+              {(startDate || endDate || filter) && (
+              <button
+                onClick={() => {
+                  setStartDate('')
+                  setEndDate('')
+                  setFilter('')
+                }}
+                className="bg-gradient-to-r from-blue-600 to-blue-400 text-white px-4 py-2 rounded shadow-sm hover:brightness-110 transition text-sm"
+              >
+                Clear Filters
+              </button>
+              )}
+            </div>
+
+            <div className="flex gap-2 mb-4">
               <input
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="col-span-1 border px-3 py-2 rounded text-sm bg-[var(--background)] text-[var(--foreground)]"
+                className="flex-1 border px-3 py-2 rounded text-sm bg-[var(--background)] text-[var(--foreground)]"
               />
-
-              {/* End date */}
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="col-span-1 border px-3 py-2 rounded text-sm bg-[var(--background)] text-[var(--foreground)]"
+                className="flex-1 border px-3 py-2 rounded text-sm bg-[var(--background)] text-[var(--foreground)]"
               />
             </div>
+
 
             {loading ? (
               <div className="space-y-4 flex-grow">
@@ -217,18 +208,18 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
                 to get started!
               </div>
             ) : (
-              <ul className="flex flex-col gap-4 flex-grow">
-                {filteredUpdates
+              <ul className="flex flex-col gap-4 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-transparent">
+                {updates
                   .map((update) => (
                     <li
-                      key={update.id}
+                      key={`${update.id}-${update.createdAt}`}
                       className="border border-gray-300 dark:border-gray-600 p-4 rounded-lg shadow-sm transition-all duration-200 hover:scale-[1.02] hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500 bg-[var(--background)] text-[var(--foreground)] animate-fade-in"
                     >
                       <p className="text-base leading-relaxed">
                         {update.content}
                       </p>
                       <small className="text-sm text-gray-500 block mt-2">
-                        {new Date(update.createdAt).toLocaleString()}
+                        {formatDateKey(new Date(update.createdAt))}
                       </small>
                     </li>
                   ))}
@@ -259,8 +250,8 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
                 className="custom-calendar"
                 locale='en-US'
                 tileDisabled={({ date }) => {
-                  const formatted = date.toLocaleDateString()
-                  return !wordsPerDay[formatted]
+                  const key = formatDateKey(date)
+                  return !wordsPerDay[key]
                 }}
               />
             </div>
@@ -268,7 +259,7 @@ export default function Dashboard({ refresh, onAddClick }: Props) {
             {selectedDay && (
               <>
                 <p className="text-sm mb-2">
-                  {selectedDay.toLocaleDateString()}: {wordsPerDay[selectedDay.toLocaleDateString()] ?? 0} words
+                  {selectedDay.toLocaleDateString()}: {wordsPerDay[formatDateKey(selectedDay)] ?? 0} words
                 </p>
                 {topWordsForDay.length > 0 ? (
                   <ol className="list-decimal text-sm ml-4">
