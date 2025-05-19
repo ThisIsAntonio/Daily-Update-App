@@ -82,10 +82,29 @@ A lightweight login form asks the user for their name, which is saved in localSt
 The component `DashboardView` now includes a dedicated test file for filter behavior:
 - `DashboardView.test.tsx`: Basic render and search filter tests.
 - `DashboardView.filters.test.tsx`: Specific tests for date range filtering and combined search/date filtering.
+- `Navbar.test.tsx`: Tests for the navbar component.
 
 These tests ensure updates are rendered and filtered correctly based on user input.
 
 ## 📜 Version History
+
+### v2.2.0 (May 19, 2025)
+- ♻️ **Component refactoring**
+  - Introduced reusable `PrimaryButton` component for consistent button styles
+  - Extracted `ThemeToggle` into a standalone component
+  - Extracted `AppHeaderTitle` into a dedicated component
+  - Simplified and cleaned up `NavBar` by using the new reusable components
+- ✅ Confirmed all existing tests pass
+- ✅ Improved structure and readability of UI logic
+
+### v2.1.0 (May 19, 2025)
+- ✅ Separated date filtering logic into isolated test file
+- ✅ Added tests for:
+  - Filtering updates by date range
+  - Combining search and date filters
+  - Navigation bar (NavBar) component behavior
+- ✅ Improved test structure and reliability for `DashboardView`
+- ✅ Minor structural refinements in testing logic
 
 ### v2.0.0 (May 18, 2025)
 - ✅ Refactored dashboard to support **date range filtering**

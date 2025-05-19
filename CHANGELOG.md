@@ -3,10 +3,20 @@
 All notable changes to this project will be documented in this file.
 
 ---
+## [v2.2.0] - 2025-05-19
+### Changed
+- Refactored layout components in preparation for further UI modularity
+- Extracted and reused:
+  - `PrimaryButton` for all core CTA buttons
+  - `ThemeToggle` for dark/light theme switch
+  - `AppHeaderTitle` for title consistency
+- Cleaned up `NavBar` and improved its clarity
+
 ## [2.1.0] - 2025-05-19
 
 ### Added
 - New tests for `DashboardView` filters (date range and combined filters).
+- New tests for `navbar`.
 - Split test logic into base and advanced filtering files for clarity.
 
 ### Fixed
