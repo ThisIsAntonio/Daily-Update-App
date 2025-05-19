@@ -5,6 +5,7 @@ import NavBar from '@/components/NavBar'
 import DashboardView from '@/components/DashboardView'
 import AddUpdateButton from '@/components/AddUpdateButton'
 import { useAuth } from '@/context/AuthContext'
+import Footer from '@/components/Footer'
 
 export default function Home() {
   const [content, setContent] = useState('')
@@ -72,6 +73,8 @@ export default function Home() {
           <DashboardView refresh={refreshFlag} onAddClick={() => setShowModal(true)} />
         </div>
       </main>
+
+      <Footer />
 
       {showModal && (
         <div className="fixed inset-0 bg-black/40 dark:bg-black/70 flex items-center justify-center z-50">

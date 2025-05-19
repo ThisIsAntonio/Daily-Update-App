@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 
 ---
+## [v2.3.0] - 2025-05-19
+
+### Added
+- New **Footer component** with:
+  - Links to GitHub, LinkedIn, and personal website.
+  - Footer content with "© 2025 Daily Update App. Built with ❤️ using Next.js, Tailwind, and TypeScript."
+  - Developer credit and rights reserved statement.
+
+### Changed
+- Refactored **`NavBar`** to include reusable components like `PrimaryButton`, `ThemeToggle`, and `AppHeaderTitle`.
+- Cleaned up code in **`DashboardView`** by making it more modular with reusable components like `UpdatesList`, `UpdateItem`, and `WordStatsByDay`.
+- Improved the structure and readability of the UI logic.
+
+### Fixed
+- Fixed layout issues where footer was not showing properly on some screens (adjusted `min-height` and `overflow` styles).
+- Improved scroll behavior by making the footer responsive and hiding it when not in use.
+
 ## [v2.2.0] - 2025-05-19
 ### Changed
 - Refactored layout components in preparation for further UI modularity
@@ -11,6 +28,16 @@ All notable changes to this project will be documented in this file.
   - `ThemeToggle` for dark/light theme switch
   - `AppHeaderTitle` for title consistency
 - Cleaned up `NavBar` and improved its clarity
+- Refactored update list logic from `DashboardView` into `UpdatesList` and `UpdateItem` components
+- Cleaned up conditional rendering for loading and empty state
+
+### Added
+- New reusable `UpdateItem` component to display a single update
+- `UpdatesList` to wrap logic and list presentation
+- `AppHeaderTitle` to provide a consistent title component
+- `PrimaryButton` for consistent button styles
+- `ThemeToggle` for easy theme switching
+- `NavBar` for a more structured navigation bar
 
 ## [2.1.0] - 2025-05-19
 

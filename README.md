@@ -11,11 +11,18 @@ A full-stack internal tool where users can submit daily updates, built with the 
 - ✅ Filter updates by user ID
 - ✅ Dark/light theme toggle
 - ✅ Analytics: updates per day, total count, top words
-+ - ✅ Date range filtering for updates
-+ - ✅ Search updates by content
-+ - ✅ Calendar-based word tracking per day
-+ - ✅ Clear filters button with elegant UI
-+ - ✅ Infinite scrolling (when no filters applied)
+  - ✅ Date range filtering for updates
+  - ✅ Search updates by content
+  - ✅ Calendar-based word tracking per day
+  - ✅ Clear filters button with elegant UI
+  - ✅ Infinite scrolling (when no filters applied)
+- ✅ **Refactored UI components**:
+  - Introduced reusable `PrimaryButton`, `ThemeToggle`, `AppHeaderTitle` for better UI consistency.
+  - Extracted `NavBar`, `WordStatsByDay`, `UpdatesList`, and `UpdateItem` into reusable components.
+  - **Refined Dashboard structure**: Cleaned up logic and made it more modular.
+- ✅ Improved **layout** for better readability and organization in the Dashboard view.
+- ✅ **Footer component** added with links to personal portfolio, GitHub, LinkedIn, etc.
+- ✅ **Added footer information**: Added rights, technologies used, and social media links to the footer.
 
 
 ## 🚀 Tech Stack
@@ -88,14 +95,30 @@ These tests ensure updates are rendered and filtered correctly based on user inp
 
 ## 📜 Version History
 
+### v2.3.0 (May 19, 2025)
+- ♻️ **Component refactoring**:
+  - Refactored `DashboardView` with separate logic for updates and filtering into isolated components.
+  - Modularized and improved code with reusable components:
+    - `PrimaryButton` for consistent button styling.
+    - `ThemeToggle` for dark/light mode toggling.
+    - `AppHeaderTitle` for standardized header titles.
+    - `UpdateList` and `UpdateItem` for modular update list rendering.
+- ✅ **Footer added** with links to GitHub, LinkedIn, Portfolio, and more.
+- ✅ Improved **scroll behavior** by making the footer responsive and hiding it when not in use.
+
 ### v2.2.0 (May 19, 2025)
-- ♻️ **Component refactoring**
-  - Introduced reusable `PrimaryButton` component for consistent button styles
-  - Extracted `ThemeToggle` into a standalone component
-  - Extracted `AppHeaderTitle` into a dedicated component
-  - Simplified and cleaned up `NavBar` by using the new reusable components
-- ✅ Confirmed all existing tests pass
-- ✅ Improved structure and readability of UI logic
+- ♻️ **Component refactoring**:
+  - Introduced reusable `PrimaryButton` component for consistent button styles.
+  - Extracted `ThemeToggle` into a standalone component.
+  - Extracted `AppHeaderTitle` into a dedicated component.
+  - Simplified and cleaned up `NavBar` by using the new reusable components.
+- ✅ Confirmed all existing tests pass.
+- ✅ Improved structure and readability of UI logic.
+- ✅ Refactored dashboard update list into:
+  - `UpdatesList`: handles update list rendering.
+  - `UpdateItem`: handles individual update item.
+- ✅ Improved separation of concerns for better readability and testability.
+
 
 ### v2.1.0 (May 19, 2025)
 - ✅ Separated date filtering logic into isolated test file
