@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 
 ---
+## [2.1.0] - 2025-05-19
+
+### Added
+- New tests for `DashboardView` filters (date range and combined filters).
+- Split test logic into base and advanced filtering files for clarity.
+
+### Fixed
+- Improved test reliability by explicitly selecting date inputs and placeholders.
 
 ## [2.0.0] - 2025-05-18
 
@@ -26,7 +34,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-## [1.1.0] - 2025-05-10
+## [1.1.0] - 2025-05-17
 
 ### Added
 - Analytics widgets:
@@ -38,7 +46,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-## [1.0.0] - 2025-05-01
+## [1.0.0] - 2025-05-03
 
 ### Added
 - User login simulation

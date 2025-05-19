@@ -77,6 +77,14 @@ A lightweight login form asks the user for their name, which is saved in localSt
 - `/prisma/schema.prisma`: Prisma DB schema
 - `/img`: Screenshots for README
 
+## 🧪 Testing
+
+The component `DashboardView` now includes a dedicated test file for filter behavior:
+- `DashboardView.test.tsx`: Basic render and search filter tests.
+- `DashboardView.filters.test.tsx`: Specific tests for date range filtering and combined search/date filtering.
+
+These tests ensure updates are rendered and filtered correctly based on user input.
+
 ## 📜 Version History
 
 ### v2.0.0 (May 18, 2025)
