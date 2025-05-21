@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [v2.5.0] - 2025-05-21
+
+### Added
+- ✅ PostgreSQL integration with Railway
+- ✅ Prisma schema updated and migrated to PostgreSQL
+- ✅ Vercel environment configured for persistent DB storage
+- ✅ Live analytics fully functional using remote data
+
+### Fixed
+- 🐞 Navbar now renders consistently after login
+- 🐞 Resolved theme toggle hydration edge case
+
 ## [v2.4.0] - 2025-05-21
 
 ### Added

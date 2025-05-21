@@ -3,6 +3,7 @@
 
 | Version   | Date         | Highlights                                                                                  |
 |-----------|--------------|---------------------------------------------------------------------------------------------|
+| v2.5.0    | 2025-05-21   | 🐘 Switched to PostgreSQL with Railway<br>✅ Full persistence on Vercel<br>🐞 Fixed Navbar and theme mount issue |
 | v2.4.0    | 2025-05-21   | 🧪 Added GitHub Actions for CI<br>✅ Integrated test workflow using pnpm + Vitest<br>🧼 Updated test script for compatibility |
 | v2.3.1    | 2025-05-21   | 🧪 Added full component test coverage with Vitest<br>♻️ Refactored NavBar and test files structure<br>✅ Improved test mocks and reliability |
 | v2.3.0    | 2025-05-19   | ✅ Added **Footer component** with links to GitHub, LinkedIn, and personal website.<br> ✅ Footer includes developer credit and rights reserved statement.|

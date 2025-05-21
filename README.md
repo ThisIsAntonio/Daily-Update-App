@@ -52,7 +52,7 @@ pnpm dev
 3. Submit updates via the "+ Add Update" button.
 4. Try searching or filtering updates by date.
 5. Explore the analytics on the right side!
-
+6. Toggle between dark and light themes using the button in the navbar.
 
 ## 🖼 Screenshots
 
@@ -87,6 +87,34 @@ A lightweight login form asks the user for their name, which is saved in localSt
 - `/src/server/db.ts`: Prisma client instance
 - `/prisma/schema.prisma`: Prisma DB schema
 - `/img`: Screenshots for README
+
+## 🗄️ Database Setup (Production)
+
+This project uses a live **PostgreSQL database hosted on [Railway](https://railway.app)**.
+
+- Prisma ORM is used to manage the schema and database access.
+- `DATABASE_URL` is injected as an environment variable in Vercel.
+- The schema is pushed to Railway on local development using:
+
+```bash
+pnpm prisma db push
+```
+> Originally developed with SQLite for local testing.  
+> Switched to PostgreSQL for production deployment to enable persistent cloud storage and full Vercel compatibility.
+
+
+## 🌐 Live Demo
+
+👉 [https://daily-update-6k4b359wk-marcos-astudillos-projects.vercel.app](https://daily-update-6k4b359wk-marcos-astudillos-projects.vercel.app)
+
+You can:
+
+- ✅ Simulate login with any name  
+- ✅ Submit daily updates  
+- ✅ Filter by date or content  
+- ✅ Visualize analytics on word usage  
+- ✅ Enjoy dark/light mode with persistence
+- ✅ Explore the code on GitHub
 
 ## 🧪 Testing
 
