@@ -18,6 +18,7 @@ export default function UpdatesList({ updates, loading, onAddClick }: UpdatesLis
                 {Array.from({ length: 3 }).map((_, idx) => (
                     <div
                         key={idx}
+                        role="status"
                         className="animate-pulse space-y-2 p-4 border rounded bg-[var(--background)] shadow"
                     >
                         <div className="h-4 bg-gray-300 rounded w-3/4"></div>

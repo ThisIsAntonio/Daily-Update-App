@@ -30,7 +30,7 @@ export default function LoginScreen({ login, hasMounted }: Props) {
                 <div className="absolute inset-2 sm:inset-4 rounded-xl animate-border-loop bg-[conic-gradient(at_top_left,_#60a5fa,_#3b82f6,_#2563eb,_#60a5fa)] bg-[length:100%_100%] blur-sm opacity-40 z-0" />
 
                 {/* Login form */}
-                <form onSubmit={handleSubmit} className="relative z-10 space-y-4 border p-6 rounded-xl shadow max-w-sm w-full bg-[var(--background)] animate-fade-in">
+                <form onSubmit={handleSubmit}  role="form" className="relative z-10 space-y-4 border p-6 rounded-xl shadow max-w-sm w-full bg-[var(--background)] animate-fade-in">
                     <h2 className="text-xl font-bold text-center">Enter your name</h2>
                     <label htmlFor="name" className="sr-only">Username</label>
                     <input

@@ -25,7 +25,7 @@ beforeEach(() => {
         Promise.resolve({
             json: () => Promise.resolve({ updates: mockUpdates }),
         })
-    ) as any
+    ) as unknown as typeof fetch
 })
 
 describe('DashboardView', () => {

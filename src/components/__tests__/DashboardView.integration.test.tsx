@@ -25,14 +25,12 @@ const mockUpdates = [
     },
 ]
 
-screen.debug()
-
 beforeEach(() => {
     global.fetch = vi.fn(() =>
         Promise.resolve({
             json: () => Promise.resolve({ updates: mockUpdates }),
         })
-    ) as any
+    ) as unknown as typeof fetch
 })
 
 describe('DashboardView filters', () => {

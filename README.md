@@ -1,6 +1,8 @@
 # Daily Update App
 
-A full-stack internal tool where users can submit daily updates, built with the T3 Stack (Next.js, TypeScript, Prisma).
+Daily Update App is a Full-Stack internal tool that helps individuals or teams track and reflect on their daily progress. Submit your daily logs, review historical updates, and gain insight with analytics like word trends and update volume — all in a clean and responsive dashboard.
+
+Built with the T3 Stack (Next.js, TypeScript, Prisma).
 
 ## ✨ Features
 
@@ -86,14 +88,46 @@ A lightweight login form asks the user for their name, which is saved in localSt
 
 ## 🧪 Testing
 
-The component `DashboardView` now includes a dedicated test file for filter behavior:
-- `DashboardView.test.tsx`: Basic render and search filter tests.
-- `DashboardView.filters.test.tsx`: Specific tests for date range filtering and combined search/date filtering.
-- `Navbar.test.tsx`: Tests for the navbar component.
+This project includes a complete test suite using **Vitest** and **React Testing Library**.
 
-These tests ensure updates are rendered and filtered correctly based on user input.
+### Coverage includes:
+
+- `NavBar`: displays user, logout, title, theme toggle
+- `DashboardView`: full integration, rendering, filter logic
+- `LoginScreen`: form validation and input
+- `UpdatesList` & `UpdateItem`: update rendering, structure
+- `UpdateFilters`: interaction testing (search, date)
+- `AddUpdateButton`: button behavior and icon
+- `PrimaryButton`: reusable button styling
+- `ThemeToggle`: dark/light theme logic
+- `SummaryCard`: displays total word count
+- `TopWordsPanel`: pie chart for top words
+- `MostVerboseDay`: day with highest word count
+- `WordStatsByDay`: calendar-based word stats
+- `UpdatesPerDayChart`: area chart with tooltip rendering
+
+### Run tests
+
+```bash
+pnpm vitest
+```
+
+### Run tests in watch mode
+
+```bash
+pnpm vitest dev
+```
 
 ## 📜 Version History
+
+### v2.3.1 (May 21, 2025)
+- 🧪 **Full test coverage** using Vitest and Testing Library:
+  - Added tests for all major components including: `NavBar`, `LoginScreen`, `UpdatesList`, `UpdateItem`, `ThemeToggle`, `TopWordsPanel`, `WordStatsByDay`, and more.
+  - Created `DashboardView.integration.test.tsx` and `DashboardView.smoke.test.tsx` for full render validation.
+- ♻️ Refactored test structure into `__tests__` folder.
+- ✅ Improved `AuthContext` and `useDarkMode` mocks for consistent rendering.
+- 🐞 Fixed multiple failing test cases (e.g., `NavBar`, `Log out` button, dark/light icons).
+- ✅ Improved test reliability by addressing async rendering issues and DOM role errors.
 
 ### v2.3.0 (May 19, 2025)
 - ♻️ **Component refactoring**:

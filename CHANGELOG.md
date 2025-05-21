@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 
 ---
+## [v2.3.1] - 2025-05-21
+
+### Added
+- 🧪 Complete test coverage using Vitest and React Testing Library
+- ✅ New test files:
+  - `NavBar.test.tsx`, `LoginScreen.test.tsx`
+  - `UpdatesList.test.tsx`, `UpdateItem.test.tsx`, `UpdateFilters.test.tsx`
+  - `AddUpdateButton.test.tsx`, `PrimaryButton.test.tsx`, `ThemeToggle.test.tsx`
+  - `SummaryCard.test.tsx`, `TopWordsPanel.test.tsx`, `MostVerboseDay.test.tsx`
+  - `WordStatsByDay.test.tsx`, `UpdatesPerDayChart.test.tsx`
+  - `DashboardView.test.tsx`, `DashboardView.integration.test.tsx`, `DashboardView.smoke.test.tsx`
+
+### Changed
+- 🧼 Improved test organization by moving test files into `__tests__` directory
+- ♻️ Refactored `NavBar` to simplify testability
+- ✅ Updated Vitest config and ESLint for consistency
+
+### Fixed
+- ✅ Resolved testing issues with `AuthContext` and `useDarkMode` mock
+- 🐞 Fixed various test errors caused by async rendering and DOM roles
+
 ## [v2.3.0] - 2025-05-19
 
 ### Added

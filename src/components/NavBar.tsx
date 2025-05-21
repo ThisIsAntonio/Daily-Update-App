@@ -11,7 +11,7 @@ type NavBarProps = {
   rightContent?: ReactNode
 }
 export default function NavBar({ rightContent }: NavBarProps) {
-  const [isDark, setIsDark, hasMounted] = useDarkMode()
+  const [ hasMounted] = useDarkMode()
   const { userId, logout } = useAuth()
 
   if (!hasMounted) return null

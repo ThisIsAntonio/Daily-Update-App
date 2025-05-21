@@ -2,11 +2,10 @@ import { describe, it, vi, expect } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import NavBar from '../NavBar'
 import { AuthContext } from '@/context/AuthContext'
-import useDarkMode from '@/hooks/useDarkMode'
 
 // Mock del hook useDarkMode
 vi.mock('@/hooks/useDarkMode', () => ({
-    default: () => [false, vi.fn(), true],
+    default: () => [true, vi.fn(), true],
 }))
 
 describe('NavBar', () => {
