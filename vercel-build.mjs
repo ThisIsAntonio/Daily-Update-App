@@ -1,5 +1,5 @@
 // vercel-build.mjs
-import { $ } from "execa";
+import { execSync } from "node:child_process";
 
-await $`pnpm prisma generate`;
-await $`pnpm build`;
+execSync("pnpm prisma generate", { stdio: "inherit" });
+execSync("pnpm build", { stdio: "inherit" });
