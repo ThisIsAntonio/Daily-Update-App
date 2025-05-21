@@ -13,8 +13,8 @@ type NavBarProps = {
 export default function NavBar({ rightContent }: NavBarProps) {
   const [ hasMounted] = useDarkMode()
   const { userId, logout } = useAuth()
-
-  if (!hasMounted) return null
+  console.log('hasMounted', hasMounted)
+  //if (!hasMounted) return null
 
   return (
     <nav className="bg-[var(--background)] text-[var(--foreground)] px-6 py-2 sm:py-4 shadow transition-colors border-b border-gray-300 dark:border-gray-700 ">
