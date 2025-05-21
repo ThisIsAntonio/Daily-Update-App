@@ -39,7 +39,13 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Missing userId" }, { status: 400 });
   }
 
-  const where: any = {
+  const where: {
+    userId: string;
+    createdAt?: {
+      gte?: Date;
+      lte?: Date;
+    };
+  } = {
     userId,
     ...(startDate || endDate
       ? {
