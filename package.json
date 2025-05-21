@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next dev",
     "lint": "next lint",
-    "test": "vitest"
+    "test": "vitest run --coverage"
   },
   "dependencies": {
     "@next/env": "^15.3.2",

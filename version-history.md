@@ -3,6 +3,7 @@
 
 | Version   | Date         | Highlights                                                                                  |
 |-----------|--------------|---------------------------------------------------------------------------------------------|
+| v2.4.0    | 2025-05-21   | 🧪 Added GitHub Actions for CI<br>✅ Integrated test workflow using pnpm + Vitest<br>🧼 Updated test script for compatibility |
 | v2.3.1    | 2025-05-21   | 🧪 Added full component test coverage with Vitest<br>♻️ Refactored NavBar and test files structure<br>✅ Improved test mocks and reliability |
 | v2.3.0    | 2025-05-19   | ✅ Added **Footer component** with links to GitHub, LinkedIn, and personal website.<br> ✅ Footer includes developer credit and rights reserved statement.|
 | v2.2.0    | 2025-05-19   | ✅ Extracted update list logic into `UpdatesList` and `UpdateItem` components for clarity   |

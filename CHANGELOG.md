@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 
 ---
+
+## [v2.4.0] - 2025-05-21
+
+### Added
+- 🧪 CI workflow with **GitHub Actions** using `pnpm` + `Vitest`
+- ✅ Automated test runs for all pushes and pull requests to `main` branch
+
+### Changed
+- ✅ Updated `package.json` test script to include `--run --coverage` for CI
+- 🧼 Verified compatibility of Vitest config with CI environments
+
 ## [v2.3.1] - 2025-05-21
 
 ### Added

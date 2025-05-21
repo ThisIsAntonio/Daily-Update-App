@@ -25,7 +25,9 @@ Built with the T3 Stack (Next.js, TypeScript, Prisma).
 - ✅ Improved **layout** for better readability and organization in the Dashboard view.
 - ✅ **Footer component** added with links to personal portfolio, GitHub, LinkedIn, etc.
 - ✅ **Added footer information**: Added rights, technologies used, and social media links to the footer.
-
+- ✅ **Automated testing workflow**:
+  - GitHub Actions CI runs tests on every push and pull request.
+  - Ensures test coverage and code stability using `Vitest` and `pnpm`.
 
 ## 🚀 Tech Stack
 
@@ -117,6 +119,12 @@ pnpm vitest
 ```bash
 pnpm vitest dev
 ```
+
+## 🛠 Continuous Integration (CI)
+
+This project uses **GitHub Actions** to run all Vitest tests on every push and pull request to the `main` branch. It ensures code quality and prevents regressions automatically.
+
+Workflow: `.github/workflows/ci.yml`
 
 ## 📜 Version History
 
