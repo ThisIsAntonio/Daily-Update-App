@@ -105,7 +105,7 @@ pnpm prisma db push
 
 ## 🌐 Live Demo
 
-👉 [https://daily-update-6k4b359wk-marcos-astudillos-projects.vercel.app](https://daily-update-6k4b359wk-marcos-astudillos-projects.vercel.app)
+👉 [https://dailyupdate-mac.vercel.app](https://dailyupdate-mac.vercel.app)
 
 You can:
 
