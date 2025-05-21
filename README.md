@@ -156,6 +156,15 @@ Workflow: `.github/workflows/ci.yml`
 
 ## 📜 Version History
 
+### v2.5.0 (May 21, 2025)
+- 🐘 **Switched to PostgreSQL** using Railway for persistent cloud database
+- 🔐 Updated `.env` and Prisma schema to support production environments
+- 🌐 Deployed final version to Vercel with public URL and working authentication
+- ✅ Added real-time updates saving, retrieval, filtering, and analytics
+- 🧼 Fixed `NavBar` rendering issue and theme toggle hydration glitch
+- 💅 Custom favicon added for a polished production look
+- 🐞 Fixed minor bugs to deploy on Vercel
+
 ### v2.3.1 (May 21, 2025)
 - 🧪 **Full test coverage** using Vitest and Testing Library:
   - Added tests for all major components including: `NavBar`, `LoginScreen`, `UpdatesList`, `UpdateItem`, `ThemeToggle`, `TopWordsPanel`, `WordStatsByDay`, and more.
