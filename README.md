@@ -1,5 +1,15 @@
 # Daily Update App
 
+[![Vercel](https://vercelbadge.vercel.app/api/ThisIsAntonio/Daily-Update-App)](https://dailyupdate-mac.vercel.app)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![Tests](https://github.com/ThisIsAntonio/Daily-Update-App/actions/workflows/ci.yml/badge.svg)](https://github.com/ThisIsAntonio/Daily-Update-App/actions/workflows/ci.yml)
+[![Vitest](https://img.shields.io/badge/tested%20with-vitest-6E9F18.svg?logo=vitest)](https://vitest.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)](https://nextjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.x-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Prisma](https://img.shields.io/badge/Prisma-ORM-3982CE?logo=prisma)](https://www.prisma.io/)
+[![T3 Stack](https://img.shields.io/badge/Stack-T3-purple?logo=three.js)](https://create.t3.gg/)
+
 Daily Update App is a Full-Stack internal tool that helps individuals or teams track and reflect on their daily progress. Submit your daily logs, review historical updates, and gain insight with analytics like word trends and update volume — all in a clean and responsive dashboard.
 
 Built with the T3 Stack (Next.js, TypeScript, Prisma).
